@@ -1,0 +1,6 @@
+{
+  "name": "Marketcap",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./Marketcap.js"
+}
