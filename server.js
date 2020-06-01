@@ -48,9 +48,7 @@ app.get('/get/daily', (req, res) => {
             console.log(err);
         } else {
             connection.query(
-                'SELECT BUY_DATE as DATE, sum(BUY_AMOUNT) as TOTAL_BUY, sum(SELL_AMOUNT) as TOTAL_SELL, sum(TAX) as TOTAL_TAX, sum(FEE) as TOTAL_FEE \
-                FROM server_test GROUP BY BUY_DATE \
-                JOIN test_pl as pl ON server_test.DATE = pl.DATE',
+                'SELECT BUY_DATE as DATE, sum(server_test.BUY_AMOUNT) as TOTAL_BUY, sum(server_test.SELL_AMOUNT) as TOTAL_SELL, sum(TAX) as TOTAL_TAX, sum(FEE) as TOTAL_FEE, avg(test_pl.TOTAL_ASSET) as TOTAL_ASSET FROM server_test INNER JOIN test_pl ON server_test.BUY_DATE = test_pl.DATE GROUP BY BUY_DATE',
                 (err, rows, fields) => {
                     res.send(rows);
                 }
@@ -60,24 +58,6 @@ app.get('/get/daily', (req, res) => {
         })
 });
 
-
-app.get('/get/pl', (req, res) => {
-
-    pool.getConnection(function (err, connection) {
-
-        if (err) {``
-            console.log(err);
-        } else {
-            connection.query(
-                'SELECT DATE, TOTAL_ASSET FROM test_pl ORDER BY DATE DESC',
-                (err, rows, fields) => {
-                    res.send(rows);
-                    }
-                )
-            connection.release();
-            }
-        })
-});
 
 
 app.listen(port, ()=>console.log(`Listening to Port ${port}`));
